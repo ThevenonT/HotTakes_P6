@@ -23,6 +23,7 @@ exports.signup = (req, res, next) => {
 
 // vérifie si l'email et le mot de passe son enregistrer dans la bdd
 exports.login = (req, res, next) => {
+    console.log('email', req.body);
     // vérifie si l'email est enregistré 
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -40,7 +41,7 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.ACCESS_TOKEN_SECRET,
                             { expiresIn: '24h' }
                         )
                     });
