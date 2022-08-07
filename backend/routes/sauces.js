@@ -14,4 +14,7 @@ router.post('/', auth, multer, sauceCtrl.createSauce);
 // afficher un objet 
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 
+// supprimer un element
+router.delete('/:id', auth, sauceCtrl.deleteSauce);
+
 module.exports = router;
