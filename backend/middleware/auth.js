@@ -1,20 +1,35 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-// ajout d'un token securisé
+// verification du token 
 module.exports = (req, res, next) => {
     try {
 
+        // récupère le token 
         const token = req.headers.authorization.split(' ')[1];
+        // vérifie la présence du token 
+        if (!token) {
+            console.log('unauthorized request!');
+            throw 'token non valable !';
+        }
+
+        // décode le token 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // récupère l'id unique de l'utilisateur dans le token
         const userId = decodedToken.userId;
+        // ajout du token dans req.auth
         req.auth = { userId };
 
-        if (req.body.userId && req.body.userId !== userId) {
-            throw 'User ID non valable !';
+        // vérifie si le token n'est pas valide ou n'a pas pue être décodé 
+        if (!decodedToken) {
+            console.log('unauthorized request!');
+            throw 'token non valable !';
+
         } else {
             next();
         }
+
     } catch {
-        res.status(403).json({ error: error | 'unauthorized request!' });
+
+        return res.status(403).json({ error: error | 'unauthorized request!' });
     }
 }

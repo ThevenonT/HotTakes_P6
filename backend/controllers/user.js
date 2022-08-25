@@ -23,12 +23,17 @@ exports.signup = (req, res, next) => {
 
 // vérifie si l'email et le mot de passe son enregistrer dans la bdd
 exports.login = (req, res, next) => {
+
+    /** * Créer un payload aléatoire */
+    let payload = Math.random(10).toString(9).split('.')[1];
+
     console.log('email', req.body);
+
     // vérifie si l'email est enregistré 
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
-                return res.status(401).json({ error: 'utiliateur non trouvé !' });
+                return res.status(401).json({ error: 'utilisateur non trouvé !' });
             }
             // vérifie le mots de passe fournit 
             bcrypt.compare(req.body.password, user.password)
@@ -36,17 +41,19 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: 'mot de passe incorrect !' });
                     }
+
                     // return user._id et le token 
                     return res.status(200).json({
                         userId: user._id,
+                        // Créer un token sécurisé 
                         token: jwt.sign(
-                            { userId: user._id },
+                            { payload: payload, userId: user._id },
                             process.env.ACCESS_TOKEN_SECRET,
                             { expiresIn: '24h' }
                         )
                     });
                 })
-                .catch(error => res.status(500).json({ error }))
+                .catch(() => res.status(500).json({ error }))
         })
-        .catch(error => res.status(500).json({ error }))
+        .catch(() => res.status(500).json({ error }))
 };
