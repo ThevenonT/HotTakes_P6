@@ -5,7 +5,7 @@ const sauceCtrl = require('../controllers/sauces');
 const multer = require('../middleware/multer-config');
 
 
-// afficher tous les element  
+// afficher tous les elements  
 router.get('/', auth, sauceCtrl.getAllSauce);
 
 // enregistrer un element  

@@ -14,7 +14,7 @@ exports.createSauce = (req, res, next) => {
 
     // récupère les information de la sauce dans une variable 
     const sauces = JSON.parse(req.body.sauce);
-
+    console.log(sauces);
     // crée un nouvel element sauce avec l'url de l'image associer 
     const sauce = new Sauce({
         ...sauces,
