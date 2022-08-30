@@ -1,3 +1,6 @@
 node_modules
 node_modules
 images
+.vscode
+.angular
+.DS_Store
