@@ -14,7 +14,7 @@ exports.createSauce = (req, res, next) => {
 
     // récupère les information de la sauce dans une variable 
     const sauces = JSON.parse(req.body.sauce);
-    console.log(sauces);
+
     // crée un nouvel element sauce avec l'url de l'image associer 
     const sauce = new Sauce({
         ...sauces,
@@ -24,7 +24,7 @@ exports.createSauce = (req, res, next) => {
     // sauvegarde le nouvel element 
     sauce.save()
         .then(() => res.status(201).json({ message: 'objet enregistrer' }))
-        .catch(() => res.status(400).json({ error }));
+        .catch((error) => res.status(400).json({ error }));
 
 };
 
@@ -83,9 +83,9 @@ exports.modifySauce = (req, res, next) => {
 exports.likes = (req, res, next) => {
     const userId = req.body.userId;
     const sauceId = req.params.id;
-    console.log(sauceId);
-    console.log(userId);
-    console.log(req.body.like);
+    console.log('sauceId', sauceId);
+    console.log('userId', userId);
+    console.log('like', req.body.like);
     switch (req.body.like) {
         case 1:
             addLike(res, sauceId, userId);
