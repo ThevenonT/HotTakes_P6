@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// inscrit un nouvel user et hash le mots de passe 
+/** inscrit un nouvel user et hash le mots de passe */
 exports.signup = (req, res, next) => {
     //hash le mot de passe 
     bcrypt.hash(req.body.password, 10)
@@ -20,8 +20,7 @@ exports.signup = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-
-// vérifie si l'email et le mot de passe son enregistrer dans la bdd
+/** vérifie si l'email et le mot de passe son enregistrer dans la bdd */
 exports.login = (req, res, next) => {
 
     /** * Créer un payload aléatoire */

@@ -6,10 +6,8 @@ const MIME_TYPES = {
     'image/png': 'png',
     'image/jpeg': 'jpeg'
 };
-/**
-* ajout de la configuration pour le stockage de l'image 
-*/
 
+/** ajout de la configuration pour le stockage de l'image */
 const storage = multer.diskStorage({
     // retourne le dossier de destination de l'image 
     destination: (req, file, callback) => {
@@ -18,8 +16,6 @@ const storage = multer.diskStorage({
 
     // configure le chemin et le nom du fichier 
     filename: (req, file, callback) => {
-
-        console.log('multer: file : ', file);
 
         /** * récupère le nom de l'image */
         const name = file.originalname.split(' ').join('_');
