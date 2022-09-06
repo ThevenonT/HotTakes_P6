@@ -15,7 +15,7 @@ const normalizePort = val => {
     }
     return false;
 };
-// verifie si un port est déclaré dans le fichier .env 
+// vérifie si un port est déclaré dans le fichier .env 
 const port = normalizePort(process.env.PORT || '3000');
 // ajoute le port a utilisé dans les paramètre 
 app.set('port', port);

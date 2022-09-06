@@ -1,8 +1,7 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
-/**
- * affiche tous les objet 
+/** affiche tous les objet 
  * @param {*} req 
  * @param {*} res 
  */
@@ -13,8 +12,7 @@ exports.getAllSauce = (req, res) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-/**
- * enregistre un objet
+/** enregistre un objet
  * @param {*} req 
  * @param {*} res 
  */
@@ -36,8 +34,7 @@ exports.createSauce = (req, res) => {
 
 };
 
-/**
- * affiche un objet
+/** affiche un objet
  * @param {*} req 
  * @param {*} res 
  */
@@ -48,59 +45,88 @@ exports.getOneSauce = (req, res) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-/**
- * supprime un element
+/** supprime un element
  * @param {*} req 
  * @param {*} res 
  */
 exports.deleteSauce = (req, res) => {
 
-    // recherche la sauce avec l'id associer 
-    Sauce.findOne({ _id: req.params.id })
-        .then(sauce => {
+    /** id de l'utilisateur connecté  */
+    const userId = req.auth.userId;
+    /** id de la sauce a modifié  */
+    const sauceId = req.params.id;
 
+    // recherche la sauce avec l'id associer 
+    Sauce.findOne({ _id: sauceId }).then((sauce) => {
+
+        // vérifie si l'utilisateur connecté est le propriétaire de la sauce 
+        if (userId === sauce.userId) {
             // récupère le nom de l'image associer 
             const filename = sauce.imageUrl.split('/images/')[1];
 
             // supprime l'image avec le nom associer dans le dossier image 
             fs.unlink(`images/${filename}`, () => {
+
                 // supprime la sauce avec l'id associer 
                 Sauce.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json('objet supprimé !'))
                     .catch((error) => res.status(400).json({ error }));
 
             })
-        })
+        } else {
+
+            return res.status(400).json({ msgErr: 'impossible de supprimé ! vous n\'êtes pas le propriétaire de la sauce !!' })
+        }
+    })
         .catch((error) => res.status(500).json({ error, msgErr: 'Aucune sauce corespondent à l\'id fournit ' }));
 };
 
-/**
- * modifie un objet 
+/** modifie un objet 
  * @param {*} req 
  * @param {*} res 
  */
 exports.modifySauce = (req, res) => {
-    // récupère les information si il y en 
-    const thingObject = req.file ?
-        {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    /** id de l'utilisateur connecté */
+    const userId = req.auth.userId;
+    /** id de la sauce a modifié */
+    const sauceId = req.params.id;
 
-        } : { ...req.body };
+    // recherche la sauce a modifié
+    Sauce.findOne({ _id: sauceId }).then((sauce) => {
 
-    Sauce.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'objet modifier' }))
-        .catch(() => res.status(304).json({ error }));
+        // vérifie si l'utilisateur connecté est le propriétaire de la sauce 
+        if (userId === sauce.userId) {
+            // récupère les informations modifier de la sauce
+            const thingObject = req.file ?
+                {
+                    userId: userId,
+                    ...JSON.parse(req.body.sauce),
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+
+                } : { userId: userId, ...JSON.parse(req.body.sauce) };
+
+            // mets a jour la sauce 
+            Sauce.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'objet modifier !' }))
+                .catch(() => res.status(304).json({ error }));
+
+        } else {
+
+            return res.status(400).json({ msgErr: 'impossible de modifier ! vous n\'êtes pas le propriétaire de la sauce !!' })
+        }
+
+    })
+        .catch(() => res.status(400).json({ msgErr: 'aucune sauce ne correspondant à l\'id fournit !' }))
+
 
 };
 
-/**
-    ** Gère la demande utilisateur 
+/** * Gère la demande utilisateur 
     ** si l'utilisateur ajoute un like = 1 -> addLike() 
     ** si l'utilisateur ajoute un dislike = -1 -> addDislike()
     ** si l'utilisateur retire un like ou un disLike = 0 -> updateLike()
 */
-exports.likes = (req, res, next) => {
+exports.likes = (req, res) => {
     // id de l'utilisateur
     const userId = req.body.userId;
     // id de la sauce 
@@ -120,8 +146,7 @@ exports.likes = (req, res, next) => {
     };
 };
 
-/**
- * ajoute un like et enregistre l'id de l'utilisateur dans le tableau de like
+/** ajoute un like et enregistre l'id de l'utilisateur dans le tableau de like
  * @param {*} res réponse au de la requête
  * @param {*} sauceId id de la sauce concernée 
  * @param {*} userId id de l'utilisateur concernée 
@@ -153,8 +178,7 @@ function addLike(res, sauceId, userId) {
         .catch(error => res.status(400).json({ error }));
 }
 
-/**
- * ajoute un dislike et enregistre l'id de l'utilisateur dans le tableau de dislike
+/** ajoute un dislike et enregistre l'id de l'utilisateur dans le tableau de dislike
  * @param {*} res réponse au de la requête
  * @param {*} sauceId id de la sauce concernée 
  * @param {*} userId id de l'utilisateur concernée 
@@ -190,8 +214,7 @@ function addDislike(res, sauceId, userId) {
 
 }
 
-/**
- * retire un like ou un dislike et retire l'id de l'utilisateur du tableau concernée
+/** retire un like ou un dislike et retire l'id de l'utilisateur du tableau concernée
  * @param {*} res réponse au de la requête
  * @param {*} sauceId id de la sauce concernée 
  * @param {*} userId id de l'utilisateur concernée 
