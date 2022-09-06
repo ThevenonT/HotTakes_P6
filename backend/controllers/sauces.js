@@ -67,11 +67,11 @@ exports.deleteSauce = (req, res) => {
                 // supprime la sauce avec l'id associer 
                 Sauce.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json('objet supprimé !'))
-                    .catch(error => res.status(400).json({ error }));
+                    .catch((error) => res.status(400).json({ error }));
 
             })
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch((error) => res.status(500).json({ error, msgErr: 'Aucune sauce corespondent à l\'id fournit ' }));
 };
 
 /**

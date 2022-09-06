@@ -8,8 +8,9 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         // vérifie la présence du token 
         if (!token) {
-            console.log('unauthorized request!');
-            throw 'token non valable !';
+
+            return res.status(403).json({ error: error, msgErr: 'unauthorized request!' });
+
         }
 
         // décode le token 
@@ -21,15 +22,16 @@ module.exports = (req, res, next) => {
 
         // vérifie si le token n'est pas valide ou n'a pas pue être décodé 
         if (!decodedToken) {
-            console.log('unauthorized request!');
-            throw 'token non valable !';
+
+            return res.status(403).json({ error: error, msgErr: 'unauthorized request!' });
+
 
         } else {
             next();
         }
 
-    } catch {
+    } catch (error) {
 
-        return res.status(403).json({ error: error | 'unauthorized request!' });
+        return res.status(403).json({ error: error, msgErr: 'unauthorized request!' });
     }
 }
