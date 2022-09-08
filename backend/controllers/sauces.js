@@ -103,12 +103,12 @@ exports.modifySauce = (req, res) => {
                     ...JSON.parse(req.body.sauce),
                     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
-                } : { userId: userId, ...JSON.parse(req.body.sauce) };
+                } : { userId: userId, ...req.body };
 
             // mets a jour la sauce 
             Sauce.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
                 .then(() => res.status(200).json({ message: 'objet modifier !' }))
-                .catch(() => res.status(304).json({ error }));
+                .catch((error) => res.status(304).json({ error }));
 
         } else {
 
