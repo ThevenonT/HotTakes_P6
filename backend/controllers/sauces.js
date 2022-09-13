@@ -29,7 +29,7 @@ exports.createSauce = (req, res) => {
 
     // sauvegarde le nouvel element 
     sauce.save()
-        .then(() => res.status(201).json({ message: 'objet enregistrer' }))
+        .then((createdSauce) => res.status(201).json({ message: 'objet enregistrer', data: createdSauce }))
         .catch((error) => res.status(400).json({ error }));
 
 };
@@ -75,7 +75,7 @@ exports.deleteSauce = (req, res) => {
             })
         } else {
 
-            return res.status(400).json({ msgErr: 'impossible de supprimé ! vous n\'êtes pas le propriétaire de la sauce !!' })
+            return res.status(401).json({ msgErr: 'impossible de supprimé ! vous n\'êtes pas le propriétaire de la sauce !!' })
         }
     })
         .catch((error) => res.status(500).json({ error, msgErr: 'Aucune sauce corespondent à l\'id fournit ' }));
@@ -112,7 +112,7 @@ exports.modifySauce = (req, res) => {
 
         } else {
 
-            return res.status(400).json({ msgErr: 'impossible de modifier ! vous n\'êtes pas le propriétaire de la sauce !!' })
+            return res.status(401).json({ msgErr: 'impossible de modifier ! vous n\'êtes pas le propriétaire de la sauce !!' })
         }
 
     })
