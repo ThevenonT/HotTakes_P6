@@ -6,3 +6,4 @@ images
 .DS_Store
 backend/.DS_Store
 .env
+frontend
