@@ -1,27 +1,20 @@
-# HotTakes
+## HotTakes P6
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.4.
+HotTakes is an online shop for hot sauce.
+This repository contains the backend of this shop.
+To start the server on your computer you need 
+to clone the repository to this address `https://github.com/ThevenonT/HotTakes_P6.git`.
+go to the backend folder and start the server.
 
-## Development server
+# START THE SERVER
+run `node run start` or `nodemon run start` to start the backend server on `port: 3000`.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+# PORT
+`port 3000` must be free or specify the desired port in the environment file 
 
-## Code scaffolding
+# MongoDB
+mongoDb connection information must be filled in the environment file and wait for the connection response to mongoDb. 
+Once the connection to mongoDB is established, the server is operational.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
