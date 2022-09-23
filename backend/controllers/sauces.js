@@ -155,11 +155,11 @@ function addLike(res, sauceId, userId) {
     // récupère la sauce sélectionnée 
     Sauce.findOne({ _id: sauceId })
         .then((sauce) => {
-            // si l'id de l'utilisateur est présent dans le tableau des like de la sauce
+            // vérifie si l'id de l'utilisateur est présent dans le tableau des like 
             if (sauce.usersLiked.includes(userId)) {
                 // retourne une erreur 
                 return res.status(400).json({ message: 'this user already likes this sauce !' });
-                // sinon
+                // sinon vérifie si l'userId est présent dans le tableau des dislike 
             } else if (sauce.usersDisliked.includes(userId)) {
                 // retourne une erreur 
                 return res.status(400).json({ message: 'impossible to like and dislike the same sauce !' });
@@ -192,12 +192,12 @@ function addDislike(res, sauceId, userId) {
             if (sauce.usersDisliked.includes(userId)) {
                 // retourne une erreur 
                 return res.status(400).json({ message: 'this user already dislikes this sauce !' });
-                // sinon
 
+                // sinon vérifie si l'userId est présent dans le tableau des like
             } else if (sauce.usersLiked.includes(userId)) {
                 // retourne une erreur 
                 return res.status(400).json({ message: 'impossible to like and dislike the same sauce !' });
-                // sinon
+                // sinon 
             } else {
                 // mets a jour les likes de la sauce sélectionnée et ajoute l'id de l'utilisateurs dans le tableau des dislikes
                 Sauce.updateOne({ _id: sauceId }, {
